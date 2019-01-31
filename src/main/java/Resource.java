@@ -3,30 +3,25 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 @Path("/")
 public class Resource {
+
+  private String config;
+
+  Resource(String c) {
+    this.config = c;
+  }
+
   @GET
   @Path("/hello")
-  public String hello() {
-    return "Hello";
-  }
-
-  @GET
-  @Path("/query")
-  public String query(@QueryParam("message") String message) {
-    return "You passed " + message;
-  }
-
-  @POST
-  @Path("/postbody")
-  public String postBody(String message) {
-    return "You posted " + message;
-  }
-
-  @POST
-  @Path("/postparam")
-  public String postParam(@FormParam("message") String message) {
-    return "You posted " + message;
+  public String hello() throws java.io.IOException {
+    List<String> allLines = Files.readAllLines(Paths.get(config), StandardCharsets.UTF_8);
+    return allLines.toArray()[0] + "\n";
   }
 }
